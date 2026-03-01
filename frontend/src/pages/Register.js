@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API from "../services/api";
 
 function Register() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3001/api/auth/register", {
+      await API.post("/auth/register", {
         username,
         password,
       });
@@ -26,7 +26,9 @@ function Register() {
         navigate("/");
       }, 1500);
     } catch (err) {
-      setError("Username already exists or invalid input");
+      setError(
+        err.response?.data?.message || "Registration failed"
+      );
       setSuccess("");
     }
   };
