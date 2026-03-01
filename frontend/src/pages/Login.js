@@ -9,24 +9,36 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (!username.trim() || !password.trim()) {
+      setError("Username and password are required.");
+      return;
+    }
+
     try {
+      setLoading(true);
+      setError("");
+
       await login(username, password);
+
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid username or password");
+      setError("Invalid username or password.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div style={{ padding: "40px", maxWidth: "400px", margin: "0 auto" }}>
       <h2>Login</h2>
 
       <form onSubmit={handleLogin}>
-        <div>
+        <div style={{ marginBottom: "10px" }}>
           <input
             type="text"
             placeholder="Username"
@@ -35,10 +47,11 @@ function Login() {
               setUsername(e.target.value);
               setError("");
             }}
+            style={{ width: "100%", padding: "8px" }}
           />
         </div>
 
-        <div style={{ marginTop: "10px" }}>
+        <div style={{ marginBottom: "10px" }}>
           <input
             type="password"
             placeholder="Password"
@@ -47,19 +60,36 @@ function Login() {
               setPassword(e.target.value);
               setError("");
             }}
+            style={{ width: "100%", padding: "8px" }}
           />
         </div>
 
-        <div style={{ marginTop: "15px" }}>
-          <button type="submit">Login</button>
-        </div>
-
         {error && (
-          <p style={{ color: "red", marginTop: "10px" }}>
+          <p style={{ color: "red", marginBottom: "10px" }}>
             {error}
           </p>
         )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ width: "100%", padding: "8px" }}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
+
+      <div style={{ marginTop: "15px", textAlign: "center" }}>
+        <p>
+          Don’t have an account?{" "}
+          <span
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
