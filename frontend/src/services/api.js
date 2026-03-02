@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://fitforge-xoor.onrender.com/api",
+  baseURL: "https://fitforge-backend-0wml.onrender.com/api",
 });
 
 API.interceptors.request.use((req) => {
